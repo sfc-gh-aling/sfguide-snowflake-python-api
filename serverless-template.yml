@@ -1,11 +1,12 @@
-service: <NAME_OF_YOUR_SERVICE>
+service: summitpydemo
 
-frameworkVersion: '2'
+frameworkVersion: '3'
 
 custom:
   wsgi:
     app: app.app
     packRequirements: false
+    pythonBin: python
   pythonRequirements:
     dockerizePip: non-linux
 
@@ -19,12 +20,12 @@ functions:
   api:
     handler: wsgi_handler.handler
     environment:
-      SNOWFLAKE_ACCOUNT: '<ACCOUNT>'
-      SNOWFLAKE_USER: 'DATA_APPS_DEMO'
+      SNOWFLAKE_ACCOUNT: '<sf_account>'
+      SNOWFLAKE_USER: 'DATA_APPS_DEMO_USER'
       SNOWFLAKE_DATABASE: 'DATA_APPS_DEMO'
       SNOWFLAKE_SCHEMA: 'DEMO'
       SNOWFLAKE_WAREHOUSE: 'DATA_APPS_DEMO'
-      SNOWFLAKE_PRIVATE_KEY: ${ssm:/<ACCOUNT>.DATA_APPS_DEMO}
+      SNOWFLAKE_PASSWORD: '<sf_user_password>'
     timeout: 15
     events:
       - http:
@@ -36,15 +37,6 @@ functions:
       - http:
           path: /trips/temperature
           method: GET
-      - http:
-          path: /sqlapi/trips/monthly
-          method: GET
-      - http:
-          path: /sqlapi/trips/day_of_week
-          method: GET
-      - http:
-          path: /sqlapi/trips/temperature
-          method: GET 
 
 plugins:
   - serverless-wsgi

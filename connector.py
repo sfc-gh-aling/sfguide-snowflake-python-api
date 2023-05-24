@@ -9,16 +9,6 @@ from utils import api_response, params_valid
 
 
 def connect():
-    p_key = serialization.load_pem_private_key(
-            config.SNOWFLAKE_PRIVATE_KEY.encode('utf-8'),
-            password=None,
-            backend=default_backend()
-        )
-    pkb = p_key.private_bytes(
-        encoding=serialization.Encoding.DER,
-        format=serialization.PrivateFormat.PKCS8,
-        encryption_algorithm=serialization.NoEncryption())
-
     snowflake.connector.paramstyle='qmark'
     conn = snowflake.connector.connect(
         user=config.SNOWFLAKE_USER,
@@ -26,7 +16,7 @@ def connect():
         warehouse=config.SNOWFLAKE_WAREHOUSE,
         schema=config.SNOWFLAKE_SCHEMA,
         database=config.SNOWFLAKE_DATABASE,
-        private_key=pkb,
+        password=config.SNOWFLAKE_PASSWORD,
         session_parameters={
             'QUERY_TAG': 'Snowflake-Python-Connector',
         })
